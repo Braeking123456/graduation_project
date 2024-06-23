@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <input type="file" id="fileInput">
+    <button onclick="uploadImage()">Upload Image</button>
+    <button onclick="predictImage()">Predict</button><br><br>
+    <textarea id="predictionTextArea" rows="4" cols="50" readonly></textarea>
+
+    <script>
+        function uploadImage() {
+            var input = document.getElementById('fileInput');
+            var file = input.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    alert('Image uploaded successfully!');
+                },
+                error: function(xhr, status, error) {
+                    alert('Error uploading image: ' + error);
+                }
+            });
+        }
+
+        function predictImage() {
+            var input = document.getElementById('fileInput');
+            var file = input.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: '/predict',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    document.getElementById('predictionTextArea').value = JSON.stringify(response.prediction);
+                },
+                error: function(xhr, status, error) {
+                    alert('Error predicting image: ' + error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
